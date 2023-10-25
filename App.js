@@ -1,12 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import CalendarContainer from './screens/CalendarContainer';
+import HomepageContainer from './screens/HomepageContainer';
+
+const Tab = createBottomTabNavigator();
+const homeName = "Today's Tasks"
+const calendarName= "Calendar"
+
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator initialRouteName = {homeName}>
+        <Tab.Screen name = {homeName} component={HomepageContainer} />
+        <Tab.Screen name = {calendarName} component={CalendarContainer} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
 
