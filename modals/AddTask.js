@@ -1,26 +1,29 @@
-import { Button, View, TextInput } from "react-native"
-import { useState } from "react";
+import { Button, View, TextInput, Form, Input } from "react-native"
+import { useState } from "react"
+import Item from "../components/Item"
 
-const AddTask = () => {
+const AddTask = ({addTodo}) => {
 
     const [text, setText] = useState("")
 
-    const onChangeText = task => setText(task)
-
-    const submitTask = (task) => {
-        // add(task)
+    const onAddTask = task => {
+        addTodo(task)
         setText("")
         alert('Task added')
     }
 
     return(
         <View>
-            <TextInput
-                value={text}
-                placeholder='Enter your task'
-                onChangeText={onChangeText}
-            />
-            <Button title={"add task"} onPress={() => submitTask(text)}/>
+            <View>
+                 <TextInput
+                    value={text}
+                    placeholder="Enter new task..."
+                    onChangeText={setText}
+                />
+            </View>
+            <View>
+                <Button title="Add Task" onPress={() => onAddTask(text)}></Button>
+            </View>
         </View>
     )
 }

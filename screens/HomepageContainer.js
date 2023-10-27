@@ -4,6 +4,7 @@ import { useState, useContext } from "react"
 import AddTask from "../modals/AddTask"
 import { TaskModalContext } from "../contexts/TaskModalContext"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid'
 import _values from 'lodash'
 import { AppLoading } from 'expo'
@@ -82,17 +83,56 @@ const HomepageContainer = () => {
         })
     }
 
-    
+    const inCompleteTodo = id => {
+        setTodos(prevState => {
+            const newState = {
+                ...prevState,
+                todos: {
+                    ...prevState.todos,
+                    [id]: {
+                        ...prevState.todos[id],
+                        isCompleted: false
+                    }
+                }
+            }
+            saveTodos(newState.todos)
+            return{ ...newState}
+        })
+    }
+
+    const completeTodo = id => {
+        setTodos(prevState => {
+            const newState = {
+                ...prevState,
+                todos: {
+                    ...prevState.todos,
+                    [id]: {
+                        ...prevState.todos[id],
+                        isCompleted: true
+                    }
+                }
+            }
+            saveTodos(newState.todos)
+            return{ ...newState}
+        })
+    }
 
     return(
         <View>
             <FlatList data={mockItems} renderItem={row => {
-                return <Item text={row.item}/>
+                return <Item
+                    isCompleted={row.item.isCompleted}
+                    textValue={row.item.textValue}
+                    id={row.item.id}
+                    deleteTodo={deleteTodo}
+                    completeTodo={completeTodo}
+                    inCompleteTodo={inCompleteTodo}
+                />
             }}
             keyExtractor={item => item.id}/>
             <Modal visible={addTaskModalOpen} animationType="slide">
                 <View style={styles.container}>
-                    <AddTask/>
+                    <AddTask addTodo={addTodo}/>
                     <Button style={styles.button} onPress={() => setAddTaskModalOpen(false)} title="close"/> 
                 </View> 
             </Modal>
