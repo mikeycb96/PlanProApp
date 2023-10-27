@@ -1,55 +1,98 @@
-import { Modal, View, Button, StyleSheet, Text } from "react-native"
+import { Modal, View, Button, StyleSheet, Text, FlatList, StatusBar } from "react-native"
+import Item from '../components/Item'
 import { useState, useContext } from "react"
-import AddTask from "../modals/AddTask";
-import { TaskModalContext } from "../contexts/TaskModalContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AddTask from "../modals/AddTask"
+import { TaskModalContext } from "../contexts/TaskModalContext"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { v4 as uuidv4 } from 'uuid'
+import _values from 'lodash'
+import { AppLoading } from 'expo'
+
 
 const HomepageContainer = () => {
 
     const {addTaskModalOpen, setAddTaskModalOpen} = useContext(TaskModalContext)
-    const [data, setData] = useState("")
+    
+    const [ isDataReady, setIsDataReady] = useState(false)
+    const [ mockItems, setMockItems] = useState(['First Item', 'Second Item', 'Third Item'])
+    const [ todos, setTodos] = useState({})
 
-    const STORAGE_KEY = "27/10/2023"
-
-    const add = async (taskName) => {
-        try {
-            await AsyncStorage.setItem(STORAGE_KEY, taskName)
-        }
-        catch (e){
-            console.error(e)
-        }
+    const componentDidMount = () => {
+        loadTodos();
     }
 
-    const get = async () => {
-        try {
-            const value = await AsyncStorage.getItem(STORAGE_KEY)
-            if(value !== null) {
-                setData(value)
+    const loadTodos = async () =>{
+        try{
+            const getTodos = await AsyncStorage.getItem('todos')
+            const parsedTodos = JSON.parse(getTodos)
+            setIsDataReady(true)
+            if(parsedTodos){
+                setTodos({})
+            } else {
+                setTodos(parsedTodos)
             }
         } 
-        catch (e){
-            console.error(e)
+        catch(e) {
+            alert('Cannot load data')
         }
     }
 
-    const removeEverything = async () =>{
-        try{
-          await AsyncStorage.clear();
-          setData(null)
-          alert('Storage successfully cleared!');
-        } catch (e) {
-          alert('Failed to clear the async storage.')
+    const saveTodos = newTodos => {
+        const saveTodos = AsyncStorage.setItem('todos', JSON.stringify(newTodos))
+    }
+
+    const addTodo = newTask => {
+        const newTodoItem = newTask
+
+        if(newTodoItem !== '') {
+            setTodos(prevState => {
+                const ID = uuidv4()
+                const newTodoObject = {
+                    [ID] : {
+                        id: ID,
+                        isCompleted: false,
+                        textValue: newTodoItem,
+                        createdAt: Date.now()
+                    }
+                }
+                const newState = {
+                    ...prevState,
+                    todos: {
+                        ...prevState.todos,
+                        ...newTodoObject
+                    }
+                }
+                saveTodos(newState.todos)
+                return { ...newState}
+            })
         }
-      }
+        
+    }
+
+    const deleteTodo = id => {
+        setTodos(prevState => {
+            const todos = prevState.todos
+            delete todos[id]
+            const newState = {
+                ...prevState,
+                ...todos
+            }
+            saveTodos(newState.todos)
+            return {...newState}
+        })
+    }
+
+    
 
     return(
         <View>
-            <Text>{data}</Text>
-            <Button title={"get data"} onPress={get}/>
-            <Button title={"clear data"} onPress={removeEverything}/>
+            <FlatList data={mockItems} renderItem={row => {
+                return <Item text={row.item}/>
+            }}
+            keyExtractor={item => item.id}/>
             <Modal visible={addTaskModalOpen} animationType="slide">
                 <View style={styles.container}>
-                    <AddTask add={add}/>
+                    <AddTask/>
                     <Button style={styles.button} onPress={() => setAddTaskModalOpen(false)} title="close"/> 
                 </View> 
             </Modal>
@@ -68,4 +111,4 @@ const styles = StyleSheet.create({
     },
   });
 
-export default HomepageContainer;
+export default HomepageContainer

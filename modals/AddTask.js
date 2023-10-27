@@ -1,14 +1,14 @@
 import { Button, View, TextInput } from "react-native"
 import { useState } from "react";
 
-const AddTask = ({add}) => {
+const AddTask = () => {
 
     const [text, setText] = useState("")
 
-    const onChangeText = task => setText(task);
+    const onChangeText = task => setText(task)
 
     const submitTask = (task) => {
-        add(task)
+        // add(task)
         setText("")
         alert('Task added')
     }
