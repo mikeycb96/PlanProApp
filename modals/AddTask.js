@@ -1,4 +1,4 @@
-import { Button, View, TextInput, Form, Input } from "react-native"
+import { Button, View, TextInput, Form, Input,StyleSheet } from "react-native"
 import { useState } from "react"
 import Item from "../components/Item"
 
@@ -9,7 +9,7 @@ const AddTask = ({addTodo}) => {
     const onAddTask = task => {
         addTodo(task)
         setText("")
-        alert('Task added')
+        // alert('Task added')
     }
 
     return(
@@ -22,10 +22,21 @@ const AddTask = ({addTodo}) => {
                 />
             </View>
             <View>
-                <Button title="Add Task" onPress={() => onAddTask(text)}></Button>
+                <Button style={styles.button} title="Add Task" onPress={() => onAddTask(text)}></Button>
             </View>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    button: {
+        margin: 20
+    },
+  });
 
 export default AddTask

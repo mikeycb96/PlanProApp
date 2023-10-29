@@ -1,6 +1,6 @@
 import { Modal, View, Button, StyleSheet, Text, FlatList, StatusBar } from "react-native"
 import Item from '../components/Item'
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import AddTask from "../modals/AddTask"
 import { TaskModalContext } from "../contexts/TaskModalContext"
 import AsyncStorage from "@react-native-async-storage/async-storage"
@@ -13,14 +13,19 @@ import { AppLoading } from 'expo'
 const HomepageContainer = () => {
 
     const {addTaskModalOpen, setAddTaskModalOpen} = useContext(TaskModalContext)
-    
+
+    const [confirmClearAllModalOpen, setConfirmClearAllModalOpen] = useState(false)
     const [ isDataReady, setIsDataReady] = useState(false)
     const [ mockItems, setMockItems] = useState(['First Item', 'Second Item', 'Third Item'])
-    const [ todos, setTodos] = useState({})
+    const [ todos, setTodos] = useState([])
 
-    const componentDidMount = () => {
+    componentDidMount = () => {
         loadTodos();
     }
+
+    useEffect(() => {
+        loadTodos();
+    }, []); 
 
     const loadTodos = async () =>{
         try{
@@ -28,9 +33,9 @@ const HomepageContainer = () => {
             const parsedTodos = JSON.parse(getTodos)
             setIsDataReady(true)
             if(parsedTodos){
-                setTodos({})
-            } else {
                 setTodos(parsedTodos)
+            } else {
+                setTodos({})
             }
         } 
         catch(e) {
@@ -38,8 +43,8 @@ const HomepageContainer = () => {
         }
     }
 
-    const saveTodos = newTodos => {
-        const saveTodos = AsyncStorage.setItem('todos', JSON.stringify(newTodos))
+    const saveTodos = async newTodos => {
+        await AsyncStorage.setItem('todos', JSON.stringify(newTodos))
     }
 
     const addTodo = newTask => {
@@ -58,13 +63,10 @@ const HomepageContainer = () => {
                 }
                 const newState = {
                     ...prevState,
-                    todos: {
-                        ...prevState.todos,
-                        ...newTodoObject
-                    }
-                }
-                saveTodos(newState.todos)
-                return { ...newState}
+                [ID]: newTodoObject[ID],
+            };
+            saveTodos(newState);
+            return newState;
             })
         }
         
@@ -72,14 +74,10 @@ const HomepageContainer = () => {
 
     const deleteTodo = id => {
         setTodos(prevState => {
-            const todos = prevState.todos
+            const todos = {...prevState}
             delete todos[id]
-            const newState = {
-                ...prevState,
-                ...todos
-            }
-            saveTodos(newState.todos)
-            return {...newState}
+            saveTodos(todos)
+            return todos
         })
     }
 
@@ -87,39 +85,43 @@ const HomepageContainer = () => {
         setTodos(prevState => {
             const newState = {
                 ...prevState,
-                todos: {
-                    ...prevState.todos,
-                    [id]: {
-                        ...prevState.todos[id],
-                        isCompleted: false
-                    }
+                [id]: {
+                    ...prevState[id],
+                    isCompleted: false
                 }
-            }
-            saveTodos(newState.todos)
-            return{ ...newState}
-        })
+            };
+            saveTodos(newState);
+            return { ...newState };
+        });
     }
-
+    
     const completeTodo = id => {
         setTodos(prevState => {
             const newState = {
                 ...prevState,
-                todos: {
-                    ...prevState.todos,
-                    [id]: {
-                        ...prevState.todos[id],
-                        isCompleted: true
-                    }
+                [id]: {
+                    ...prevState[id],
+                    isCompleted: true
                 }
-            }
-            saveTodos(newState.todos)
-            return{ ...newState}
-        })
+            };
+            saveTodos(newState);
+            return { ...newState };
+        });
     }
+
+    const clearAsyncStorage = async () => {
+        try {
+          await AsyncStorage.clear();
+          setTodos({})
+          console.log("AsyncStorage has been cleared.");
+        } catch (error) {
+          console.error("Error clearing AsyncStorage:", error);
+        }
+      };
 
     return(
         <View>
-            <FlatList data={mockItems} renderItem={row => {
+            <FlatList data={Object.values(todos)} renderItem={row => {
                 return <Item
                     isCompleted={row.item.isCompleted}
                     textValue={row.item.textValue}
@@ -136,6 +138,16 @@ const HomepageContainer = () => {
                     <Button style={styles.button} onPress={() => setAddTaskModalOpen(false)} title="close"/> 
                 </View> 
             </Modal>
+            <Button style={styles.button} onPress={() => setConfirmClearAllModalOpen(true)} title="Clear All"/> 
+            <Modal visible={confirmClearAllModalOpen} animationType="slide">
+                <View style={styles.container}>
+                    <Text>Are you sure? </Text>
+                    <Button style={styles.button} onPress={() => {
+                        clearAsyncStorage()
+                        setConfirmClearAllModalOpen(false)}} title="Yes"/> 
+                    <Button style={styles.button} onPress={() => setConfirmClearAllModalOpen(false)} title="No"/> 
+                </View> 
+            </Modal>
         </View>
     )
 }
@@ -147,7 +159,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     button: {
-        
+        margin: 20
     },
   });
 

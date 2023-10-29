@@ -6,9 +6,8 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import { NativeBaseProvider, Icon } from 'native-base';
-
-
+import { NativeBaseProvider } from "native-base"
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const { width } = Dimensions.get("window");
 
@@ -19,38 +18,27 @@ const Item = ({
   id,
   deleteTodo,
   isCompleted,
+  text,
 }) => {
-
   const toggleItem = () => {
     if (isCompleted) {
-      inCompleteTodo(id)
+      inCompleteTodo(id);
     } else {
-      completeTodo(id)
+      completeTodo(id);
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.rowContainer}>
-        <TouchableOpacity onPress={toggleItem}>
-          {/* <NativeBaseProvider>
-            <Icon 
-            name = {isCompleted ? 'checkmark-circle' : 'radio-button-off'}
-            />
-          </NativeBaseProvider> */}
-        </TouchableOpacity>
-
-        <Text
-          style={styles.text}
-        >
-          {textValue}
-        </Text>
+        <Text style={styles.text}>{textValue}</Text>
       </View>
       <TouchableOpacity onPressOut={() => deleteTodo(id)}>
-        {/* <NativeBaseProvider>
-          <Icon name = "md-trash"/>
-        </NativeBaseProvider> */}
+        <FontAwesome name="trash-o" size={40} style={{color: 'red' }}/>
       </TouchableOpacity>
+      <TouchableOpacity onPress={toggleItem}>
+          <FontAwesome name={isCompleted ? 'check-circle-o' : 'circle-o'} size={40} style={{ marginRight: 15, color: '#7A7AF6' }}/>
+        </TouchableOpacity>
     </View>
   );
 };
@@ -70,7 +58,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#4F50DC",
-    fontSize: 18,
+    fontSize: 25,
     marginVertical: 20,
     paddingLeft: 10,
   },
