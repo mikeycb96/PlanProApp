@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import { NativeBaseProvider } from "native-base"
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { NativeBaseProvider } from "native-base";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const { width } = Dimensions.get("window");
 
@@ -34,11 +34,15 @@ const Item = ({
         <Text style={styles.text}>{textValue}</Text>
       </View>
       <TouchableOpacity onPressOut={() => deleteTodo(id)}>
-        <FontAwesome name="trash-o" size={40} style={{color: 'red' }}/>
+        <FontAwesome name="trash-o" size={40} style={{ color: "red" }} />
       </TouchableOpacity>
       <TouchableOpacity onPress={toggleItem}>
-          <FontAwesome name={isCompleted ? 'check-circle-o' : 'circle-o'} size={40} style={{ marginRight: 15, color: '#7A7AF6' }}/>
-        </TouchableOpacity>
+        <FontAwesome
+          name={isCompleted ? "check-circle-o" : "circle-o"}
+          size={40}
+          style={{ marginRight: 15, color: "#7A7AF6" }}
+        />
+      </TouchableOpacity>
     </View>
   );
 };

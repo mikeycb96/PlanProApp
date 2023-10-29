@@ -1,42 +1,45 @@
-import { Button, View, TextInput, Form, Input,StyleSheet } from "react-native"
-import { useState } from "react"
-import Item from "../components/Item"
+import { Button, View, TextInput, Form, Input, StyleSheet } from "react-native";
+import { useState } from "react";
+import Item from "../components/Item";
 
-const AddTask = ({addTodo}) => {
+const AddTask = ({ addTodo }) => {
+  const [text, setText] = useState("");
 
-    const [text, setText] = useState("")
+  const onAddTask = (task) => {
+    addTodo(task);
+    setText("");
+    // alert('Task added')
+  };
 
-    const onAddTask = task => {
-        addTodo(task)
-        setText("")
-        // alert('Task added')
-    }
-
-    return(
-        <View>
-            <View>
-                 <TextInput
-                    value={text}
-                    placeholder="Enter new task..."
-                    onChangeText={setText}
-                />
-            </View>
-            <View>
-                <Button style={styles.button} title="Add Task" onPress={() => onAddTask(text)}></Button>
-            </View>
-        </View>
-    )
-}
+  return (
+    <View>
+      <View>
+        <TextInput
+          value={text}
+          placeholder="Enter new task..."
+          onChangeText={setText}
+        />
+      </View>
+      <View>
+        <Button
+          style={styles.button}
+          title="Add Task"
+          onPress={() => onAddTask(text)}
+        ></Button>
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    button: {
-        margin: 20
-    },
-  });
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    margin: 20,
+  },
+});
 
-export default AddTask
+export default AddTask;
