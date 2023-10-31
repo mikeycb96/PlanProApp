@@ -6,6 +6,7 @@ import {
   Text,
   FlatList,
   StatusBar,
+  Dimensions
 } from "react-native";
 import Item from "../components/Item";
 import { useState, useContext, useEffect } from "react";
@@ -16,6 +17,8 @@ import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import _values from "lodash";
 import { AppLoading } from "expo";
+
+const { width, height } = Dimensions.get("window");
 
 const HomepageContainer = () => {
   const { addTaskModalOpen, setAddTaskModalOpen } =
@@ -59,7 +62,7 @@ const HomepageContainer = () => {
   };
 
   const addTodo = (newTask) => {
-    const newTodoItem = newTask;
+    const newTodoItem = newTask; //string "walk the dog"
 
     if (newTodoItem !== "") {
       setTodos((prevState) => {
@@ -68,7 +71,7 @@ const HomepageContainer = () => {
           [ID]: {
             id: ID,
             isCompleted: false,
-            textValue: newTodoItem,
+            textValue: newTodoItem, //walk the dog
             createdAt: Date.now(),
           },
         };
@@ -96,7 +99,7 @@ const HomepageContainer = () => {
       const newState = {
         ...prevState,
         [id]: {
-          ...prevState[id],
+          ...prevState[id], //locates task by id in prev state
           isCompleted: false,
         },
       };
@@ -147,16 +150,6 @@ const HomepageContainer = () => {
         }}
         keyExtractor={(item) => item.id}
       />
-      <Modal visible={addTaskModalOpen} animationType="slide">
-        <View style={styles.container}>
-          <AddTask addTodo={addTodo} />
-          <Button
-            style={styles.button}
-            onPress={() => setAddTaskModalOpen(false)}
-            title="close"
-          />
-        </View>
-      </Modal>
       <Button
         style={styles.button}
         onPress={() => setConfirmClearAllModalOpen(true)}
@@ -177,6 +170,16 @@ const HomepageContainer = () => {
             style={styles.button}
             onPress={() => setConfirmClearAllModalOpen(false)}
             title="No"
+          />
+        </View>
+      </Modal>
+      <Modal visible={addTaskModalOpen} animationType="slide">
+        <View style={styles.container}>
+          <AddTask addTodo={addTodo} />
+          <Button
+            style={styles.button}
+            onPress={() => setAddTaskModalOpen(false)}
+            title="close"
           />
         </View>
       </Modal>

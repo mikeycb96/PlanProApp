@@ -12,6 +12,7 @@ const homeName = "Tasks"
 const calendarName= "Calendar"
 const settingsName= "Settings"
 
+
 const Navigation = () => {
 
     const {addTaskModalOpen, setAddTaskModalOpen} = useContext(TaskModalContext)
