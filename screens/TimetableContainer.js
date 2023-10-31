@@ -33,7 +33,7 @@ const TimetableContainer = () => {
 
     const range = {from, till}
 
-    const [todos, setTodos] = useState([{id: "one", title: "firstTodo", startDate: moment().subtract(1, 'hour').toDate(), endDate: moment().add(1, 'hour').toDate()}])
+    const [todos, setTodos] = useState([{id: "one", title: "firstTodo", startDate: moment("2023-10-31 08:00", "YYYY-MM-DD HH:mm"), endDate: moment("2023-10-31 11:00", "YYYY-MM-DD HH:mm")}])
 
     return(
         <ScrollView>
