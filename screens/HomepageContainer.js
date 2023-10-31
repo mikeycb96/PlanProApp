@@ -17,6 +17,8 @@ import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import _values from "lodash";
 import { AppLoading } from "expo";
+import moment from "moment";
+import Timetable from "react-native-calendar-timetable";
 
 const { width, height } = Dimensions.get("window");
 
@@ -33,6 +35,13 @@ const HomepageContainer = () => {
     "Third Item",
   ]);
   const [todos, setTodos] = useState([]);
+
+  // Timetable section
+
+
+  const [date, setDate] = useState(new Date())
+  const [from, setFrom] = useState(moment().subtract(3, 'days').toDate())
+  const [till, settill] = useState(moment().add(3, 'days').toISOString())
 
   componentDidMount = () => {
     loadTodos();
