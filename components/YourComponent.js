@@ -4,7 +4,7 @@ import { StyleSheet, View, Text } from "react-native";
 
 const YourComponent = ({style, item, dayIndex, daysTotal}) => {
     return(
-        <View style={styles.container}>
+        <View style={[styles.container, style]}>
             <Text>
                 {item.title}
             </Text>

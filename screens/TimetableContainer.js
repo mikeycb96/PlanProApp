@@ -37,9 +37,7 @@ const TimetableContainer = () => {
 
     return(
         <ScrollView>
-            <Timetable items={todos} renderItem={props => <YourComponent {...props}/>} date={date}>
-
-            </Timetable>
+            <Timetable items={todos} renderItem={props => <YourComponent {...props}/>} date={date}/>
         </ScrollView>
     )
 }
