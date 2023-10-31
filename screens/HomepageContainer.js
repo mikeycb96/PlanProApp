@@ -41,7 +41,7 @@ const HomepageContainer = () => {
 
   const [date, setDate] = useState(new Date())
   const [from, setFrom] = useState(moment().subtract(3, 'days').toDate())
-  const [till, settill] = useState(moment().add(3, 'days').toISOString())
+  const [till, setTill] = useState(moment().add(3, 'days').toISOString())
 
   componentDidMount = () => {
     loadTodos();

@@ -6,11 +6,13 @@ import SettingsContainer from '../screens/SettingsContainer';
 import { useContext } from 'react';
 import { TaskModalContext } from '../contexts/TaskModalContext';
 import { Button } from 'react-native';
+import TimetableContainer from '../screens/TimetableContainer';
 
 const Tab = createBottomTabNavigator();
 const homeName = "Tasks"
 const calendarName= "Calendar"
 const settingsName= "Settings"
+const timetableName = "Timetable"
 
 
 const Navigation = () => {
@@ -19,11 +21,21 @@ const Navigation = () => {
 
     return(
         <NavigationContainer>
-            <Tab.Navigator initialRouteName = {homeName}>
+            <Tab.Navigator initialRouteName = {timetableName}>
                 <Tab.Screen name = {calendarName} component={CalendarContainer} />
-                <Tab.Screen 
+                {/* <Tab.Screen 
                 name = {homeName} 
                 component={HomepageContainer} 
+                options={{
+                    headerRight: () => (
+                    <Button onPress={() => setAddTaskModalOpen(true)}
+                    title='Add Task'
+                    />
+                    ),
+                }}/> */}
+                <Tab.Screen 
+                name = {timetableName} 
+                component={TimetableContainer} 
                 options={{
                     headerRight: () => (
                     <Button onPress={() => setAddTaskModalOpen(true)}
