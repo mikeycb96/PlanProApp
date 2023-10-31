@@ -184,7 +184,7 @@ const HomepageContainer = () => {
       </Modal>
       <Modal visible={addTaskModalOpen} animationType="slide">
         <View style={styles.container}>
-          <AddTask addTodo={addTodo} />
+          {/* <AddTask addTodo={addTodo} /> */}
           <Button
             style={styles.button}
             onPress={() => setAddTaskModalOpen(false)}

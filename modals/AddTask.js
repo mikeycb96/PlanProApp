@@ -1,12 +1,13 @@
 import { Button, View, TextInput, Form, Input, StyleSheet } from "react-native";
 import { useState } from "react";
 import Item from "../components/Item";
+import moment from "moment";
 
 const AddTask = ({ addTodo }) => {
   const [text, setText] = useState("");
 
   const onAddTask = (task) => {
-    addTodo(task);
+    addTodo(task, moment("2023-10-31 08:00", "YYYY-MM-DD HH:mm"), moment("2023-10-31 10:00", "YYYY-MM-DD HH:mm"));
     setText("");
     // alert('Task added')
   };

@@ -1,8 +1,7 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-
-
-const YourComponent = ({style, item, dayIndex, daysTotal}) => {
+const YourComponent = ({style, item, dayIndex, daysTotal, deleteTodo}) => {
     return(
         <View style={[styles.container, style]}>
             <Text>
@@ -11,6 +10,9 @@ const YourComponent = ({style, item, dayIndex, daysTotal}) => {
             <Text>
                 {dayIndex}of{daysTotal}
             </Text>
+            <TouchableOpacity onPressOut={() => deleteTodo(item.id)}>
+                <FontAwesome name="trash-o" size={40} style={{ color: "white" }} />
+            </TouchableOpacity>
         </View>
     )
 }
