@@ -10,9 +10,10 @@ import {
     ScrollView
   } from "react-native";
   import Item from "../components/Item";
-  import { useState, useContext, useEffect } from "react";
+  import { useState, useContext, useEffect, useRef } from "react";
   import AddTask from "../modals/AddTask";
   import { TaskModalContext } from "../contexts/TaskModalContext";
+  import { TodosContext } from "../contexts/TodosContext";
   import AsyncStorage from "@react-native-async-storage/async-storage";
   import "react-native-get-random-values";
   import { v4 as uuidv4 } from "uuid";
@@ -33,7 +34,8 @@ const TimetableContainer = () => {
 
     const range = {from, till}
 
-    const [todos, setTodos] = useState([{id: "one", title: "firstTodo", startDate: moment("2023-10-31 08:00", "YYYY-MM-DD HH:mm"), endDate: moment("2023-10-31 11:00", "YYYY-MM-DD HH:mm")}])
+    // const [todos, setTodos] = useState([])
+    const { todos, setTodos } = useContext(TodosContext)
 
     componentDidMount = () => {
         loadTodos();
@@ -63,7 +65,7 @@ const TimetableContainer = () => {
         
     const addTodo = (taskName, start, end) => {
         const ID = uuidv4()
-        const newTodoItem = {id: ID, title: taskName, startDate: start, endDate: end}
+        const newTodoItem = {id: ID, title: taskName, startDate: start, endDate: end, isCompleted: false}
         const todoToUpdate = [...todos]
         todoToUpdate.push(newTodoItem)
         saveTodos(todoToUpdate)
@@ -85,10 +87,34 @@ const TimetableContainer = () => {
           console.error("Error clearing AsyncStorage:", error);
         }
     }
+
+    const inCompleteTodo = (id) => {
+      const inComplete = { isCompleted: false }
+      const updatedTodos = todos.map(todo =>{
+          if(todo.id === id){
+            return { ...todo, ...inComplete}
+          }
+          return todo;
+        })
+      saveTodos(updatedTodos)
+      setTodos(updatedTodos)
+    };
+  
+    const completeTodo = (id) => {
+      const inComplete = { isCompleted: true }
+      const updatedTodos = todos.map(todo =>{
+          if(todo.id === id){
+            return { ...todo, ...inComplete}
+          }
+          return todo;
+        })
+      saveTodos(updatedTodos)
+      setTodos(updatedTodos)
+    };
     
     return(
         <ScrollView>
-            <Timetable items={todos} renderItem={props => <YourComponent {...props} deleteTodo={deleteTodo}/>} date={date}/>
+            <Timetable items={todos} renderItem={props => <YourComponent {...props} inCompleteTodo={inCompleteTodo} completeTodo={completeTodo}/>} date={date}/>
             <Modal visible={addTaskModalOpen} animationType="slide">
                 <View style={styles.container}>
                 <AddTask addTodo={addTodo} />

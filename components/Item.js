@@ -12,13 +12,12 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 const { width } = Dimensions.get("window");
 
 const Item = ({
-  inCompleteTodo,
-  completeTodo,
+  // inCompleteTodo,
+  // completeTodo,
   textValue,
   id,
   deleteTodo,
-  isCompleted,
-  text,
+  // isCompleted,
 }) => {
   const toggleItem = () => {
     if (isCompleted) {
@@ -36,13 +35,13 @@ const Item = ({
       <TouchableOpacity onPressOut={() => deleteTodo(id)}>
         <FontAwesome name="trash-o" size={40} style={{ color: "red" }} />
       </TouchableOpacity>
-      <TouchableOpacity onPress={toggleItem}>
+      {/* <TouchableOpacity onPress={toggleItem}>
         <FontAwesome
           name={isCompleted ? "check-circle-o" : "circle-o"}
           size={40}
           style={{ marginRight: 15, color: "#7A7AF6" }}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

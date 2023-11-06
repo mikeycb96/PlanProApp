@@ -22,7 +22,14 @@ const Navigation = () => {
     return(
         <NavigationContainer>
             <Tab.Navigator initialRouteName = {timetableName}>
-                <Tab.Screen name = {calendarName} component={CalendarContainer} />
+                <Tab.Screen name = {calendarName} component={CalendarContainer} 
+                options={{
+                    headerRight: () => (
+                    <Button onPress={() => setAddTaskModalOpen(true)}
+                    title='Add Task'
+                    />
+                    ),
+                }}/>
                 {/* <Tab.Screen 
                 name = {homeName} 
                 component={HomepageContainer} 
@@ -36,13 +43,7 @@ const Navigation = () => {
                 <Tab.Screen 
                 name = {timetableName} 
                 component={TimetableContainer} 
-                options={{
-                    headerRight: () => (
-                    <Button onPress={() => setAddTaskModalOpen(true)}
-                    title='Add Task'
-                    />
-                    ),
-                }}/>
+                />
                 <Tab.Screen name = {settingsName} component={SettingsContainer} />
             </Tab.Navigator>
         </NavigationContainer>
