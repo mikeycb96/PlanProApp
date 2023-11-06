@@ -1,15 +1,21 @@
-import { View, FlatList, ScrollView, SafeAreaView } from "react-native"
+import { View, StyleSheet, Button, FlatList, ScrollView, SafeAreaView, Text, Modal } from "react-native"
 import { useContext, useState, useEffect } from "react";
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { TodosContext } from "../contexts/TodosContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Item from "../components/Item";
 import { SelectedDateContext } from "../contexts/SelectedDateContext";
+import { TaskModalContext } from "../contexts/TaskModalContext";
+import AddTask from "../modals/AddTask";
+import { v4 as uuidv4 } from "uuid";
+import _values from "lodash";
 
 const CalendarContainer = () => {
 
     const {selectedDate, setSelectedDate} = useContext(SelectedDateContext);
     const {todos, setTodos} = useContext(TodosContext)
+    const { addTaskModalOpen, setAddTaskModalOpen } = useContext(TaskModalContext);
+
 
     componentDidMount = () => {
       loadTodos();
@@ -17,11 +23,11 @@ const CalendarContainer = () => {
   
     useEffect(() => {
       loadTodos();
-    }, []);
+    }, [selectedDate]);
   
     const loadTodos = async() => {
       try{
-          const getTodos = await AsyncStorage.getItem("todos")
+          const getTodos = await AsyncStorage.getItem(selectedDate)
           const parsedTodos = JSON.parse(getTodos);
           if (parsedTodos) {
               setTodos(parsedTodos);
@@ -34,7 +40,7 @@ const CalendarContainer = () => {
       }
   
       const saveTodos = async (newTodos) => {
-        await AsyncStorage.setItem("todos", JSON.stringify(newTodos));
+        await AsyncStorage.setItem(selectedDate, JSON.stringify(newTodos));
     };
         
     const addTodo = (taskName, start, end) => {
@@ -88,7 +94,16 @@ const CalendarContainer = () => {
               markedDates={{
                   [selectedDate]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}
               }}/>
-      
+        <Modal visible={addTaskModalOpen} animationType="slide">
+                <View style={styles.container}>
+                <AddTask addTodo={addTodo} />
+                <Button
+                    style={styles.button}
+                    onPress={() => setAddTaskModalOpen(false)}
+                    title="close"
+                />
+                </View>
+            </Modal>
           <FlatList
           data={todos}
           renderItem={(row) => {
@@ -108,5 +123,16 @@ const CalendarContainer = () => {
         </SafeAreaView>
     )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    margin: 20,
+  },
+});
 
 export default CalendarContainer

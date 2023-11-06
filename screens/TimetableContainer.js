@@ -34,8 +34,13 @@ const TimetableContainer = () => {
 
     const range = {from, till}
 
-    // const [todos, setTodos] = useState([])
+    const [todaysTodos, setTodaysTodos] = useState([])
     const { todos, setTodos } = useContext(TodosContext)
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth()+1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
 
     componentDidMount = () => {
         loadTodos();
@@ -43,16 +48,18 @@ const TimetableContainer = () => {
     
       useEffect(() => {
         loadTodos();
-      }, []);
+      }, [todos]);
     
     const loadTodos = async() => {
     try{
-        const getTodos = await AsyncStorage.getItem("todos")
+        const getTodos = await AsyncStorage.getItem(formattedDate)
         const parsedTodos = JSON.parse(getTodos);
         if (parsedTodos) {
-            setTodos(parsedTodos);
+            setTodaysTodos(parsedTodos);
+            // setTodos(parsedTodos);
             } else {
-            setTodos([]);
+            setTodaysTodos([]);
+            // setTodos(parsedTodos);
             }
         } catch (e) {
             alert("Cannot load data");
@@ -60,23 +67,23 @@ const TimetableContainer = () => {
     }
 
     const saveTodos = async (newTodos) => {
-        await AsyncStorage.setItem("todos", JSON.stringify(newTodos));
+        await AsyncStorage.setItem(formattedDate, JSON.stringify(newTodos));
     };
         
-    const addTodo = (taskName, start, end) => {
-        const ID = uuidv4()
-        const newTodoItem = {id: ID, title: taskName, startDate: start, endDate: end, isCompleted: false}
-        const todoToUpdate = [...todos]
-        todoToUpdate.push(newTodoItem)
-        saveTodos(todoToUpdate)
-        setTodos(todoToUpdate)
-    } 
+    // const addTodo = (taskName, start, end) => {
+    //     const ID = uuidv4()
+    //     const newTodoItem = {id: ID, title: taskName, startDate: start, endDate: end, isCompleted: false}
+    //     const todoToUpdate = [...todos]
+    //     todoToUpdate.push(newTodoItem)
+    //     saveTodos(todoToUpdate)
+    //     setTodos(todoToUpdate)
+    // } 
 
-    const deleteTodo = (id) => {
-        const updatedTodos = todos.filter(todo => todo.id !== id)
-        saveTodos(updatedTodos)
-        setTodos(updatedTodos)
-    }
+    // const deleteTodo = (id) => {
+    //     const updatedTodos = todos.filter(todo => todo.id !== id)
+    //     saveTodos(updatedTodos)
+    //     setTodos(updatedTodos)
+    // }
 
     const clearAsyncStorage = async () => {
         try {
@@ -90,32 +97,32 @@ const TimetableContainer = () => {
 
     const inCompleteTodo = (id) => {
       const inComplete = { isCompleted: false }
-      const updatedTodos = todos.map(todo =>{
+      const updatedTodos = todaysTodos.map(todo =>{
           if(todo.id === id){
             return { ...todo, ...inComplete}
           }
           return todo;
         })
       saveTodos(updatedTodos)
-      setTodos(updatedTodos)
+      setTodaysTodos(updatedTodos)
     };
   
     const completeTodo = (id) => {
       const inComplete = { isCompleted: true }
-      const updatedTodos = todos.map(todo =>{
+      const updatedTodos = todaysTodos.map(todo =>{
           if(todo.id === id){
             return { ...todo, ...inComplete}
           }
           return todo;
         })
       saveTodos(updatedTodos)
-      setTodos(updatedTodos)
+      setTodaysTodos(updatedTodos)
     };
     
     return(
         <ScrollView>
-            <Timetable items={todos} renderItem={props => <YourComponent {...props} inCompleteTodo={inCompleteTodo} completeTodo={completeTodo}/>} date={date}/>
-            <Modal visible={addTaskModalOpen} animationType="slide">
+            <Timetable items={todaysTodos} renderItem={props => <YourComponent {...props} inCompleteTodo={inCompleteTodo} completeTodo={completeTodo}/>} date={date}/>
+            {/* <Modal visible={addTaskModalOpen} animationType="slide">
                 <View style={styles.container}>
                 <AddTask addTodo={addTodo} />
                 <Button
@@ -124,25 +131,25 @@ const TimetableContainer = () => {
                     title="close"
                 />
                 </View>
-            </Modal>
-                <Button
+            </Modal> */}
+                {/* <Button
             style={styles.button}
             onPress={clearAsyncStorage}
             title="Clear All"
-        />
+        /> */}
         </ScrollView>
     )
 }
 
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    button: {
-      margin: 20,
-    },
-  });
+// const styles = StyleSheet.create({
+//     container: {
+//       flex: 1,
+//       justifyContent: "center",
+//       alignItems: "center",
+//     },
+//     button: {
+//       margin: 20,
+//     },
+//   });
 
 export default TimetableContainer;
