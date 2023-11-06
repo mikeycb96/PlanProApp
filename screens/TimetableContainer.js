@@ -56,10 +56,8 @@ const TimetableContainer = () => {
         const parsedTodos = JSON.parse(getTodos);
         if (parsedTodos) {
             setTodaysTodos(parsedTodos);
-            // setTodos(parsedTodos);
             } else {
             setTodaysTodos([]);
-            // setTodos(parsedTodos);
             }
         } catch (e) {
             alert("Cannot load data");
@@ -69,31 +67,16 @@ const TimetableContainer = () => {
     const saveTodos = async (newTodos) => {
         await AsyncStorage.setItem(formattedDate, JSON.stringify(newTodos));
     };
-        
-    // const addTodo = (taskName, start, end) => {
-    //     const ID = uuidv4()
-    //     const newTodoItem = {id: ID, title: taskName, startDate: start, endDate: end, isCompleted: false}
-    //     const todoToUpdate = [...todos]
-    //     todoToUpdate.push(newTodoItem)
-    //     saveTodos(todoToUpdate)
-    //     setTodos(todoToUpdate)
-    // } 
 
-    // const deleteTodo = (id) => {
-    //     const updatedTodos = todos.filter(todo => todo.id !== id)
-    //     saveTodos(updatedTodos)
-    //     setTodos(updatedTodos)
+    // const clearAsyncStorage = async () => {
+    //     try {
+    //       await AsyncStorage.clear();
+    //       setTodos([]);
+    //       console.log("AsyncStorage has been cleared.");
+    //     } catch (error) {
+    //       console.error("Error clearing AsyncStorage:", error);
+    //     }
     // }
-
-    const clearAsyncStorage = async () => {
-        try {
-          await AsyncStorage.clear();
-          setTodos([]);
-          console.log("AsyncStorage has been cleared.");
-        } catch (error) {
-          console.error("Error clearing AsyncStorage:", error);
-        }
-    }
 
     const inCompleteTodo = (id) => {
       const inComplete = { isCompleted: false }
@@ -103,8 +86,8 @@ const TimetableContainer = () => {
           }
           return todo;
         })
-      saveTodos(updatedTodos)
-      setTodaysTodos(updatedTodos)
+      saveTodos(updatedTodos) //save to AsyncStorage
+      setTodaysTodos(updatedTodos) //save to viewing storage
     };
   
     const completeTodo = (id) => {
@@ -122,16 +105,6 @@ const TimetableContainer = () => {
     return(
         <ScrollView>
             <Timetable items={todaysTodos} renderItem={props => <YourComponent {...props} inCompleteTodo={inCompleteTodo} completeTodo={completeTodo}/>} date={date}/>
-            {/* <Modal visible={addTaskModalOpen} animationType="slide">
-                <View style={styles.container}>
-                <AddTask addTodo={addTodo} />
-                <Button
-                    style={styles.button}
-                    onPress={() => setAddTaskModalOpen(false)}
-                    title="close"
-                />
-                </View>
-            </Modal> */}
                 {/* <Button
             style={styles.button}
             onPress={clearAsyncStorage}
@@ -140,16 +113,5 @@ const TimetableContainer = () => {
         </ScrollView>
     )
 }
-
-// const styles = StyleSheet.create({
-//     container: {
-//       flex: 1,
-//       justifyContent: "center",
-//       alignItems: "center",
-//     },
-//     button: {
-//       margin: 20,
-//     },
-//   });
 
 export default TimetableContainer;

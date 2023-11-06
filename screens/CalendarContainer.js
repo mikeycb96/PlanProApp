@@ -58,39 +58,11 @@ const CalendarContainer = () => {
         setTodos(updatedTodos)
     }
 
-    const inCompleteTodo = (id) => {
-      setTodos((prevState) => {
-        const newState = {
-          ...prevState,
-          [id]: {
-            ...prevState[id], //locates task by id in prev state
-            isCompleted: false,
-          },
-        };
-        saveTodos(newState);
-        return { ...newState };
-      });
-    };
-  
-    const completeTodo = (id) => {
-      setTodos((prevState) => {
-        const newState = {
-          ...prevState,
-          [id]: {
-            ...prevState[id],
-            isCompleted: true,
-          },
-        };
-        saveTodos(newState);
-        return { ...newState };
-      });
-    };
-
     return(
         <SafeAreaView style={{flex: 1}}>
           <Calendar
               onDayPress={day => {
-              setSelectedDate(day.dateString)}}
+              setSelectedDate(day.dateString)}} //select todays date by default
               markedDates={{
                   [selectedDate]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}
               }}/>
@@ -109,12 +81,9 @@ const CalendarContainer = () => {
           renderItem={(row) => {
             return (
               <Item
-                // isCompleted={row.item.isCompleted}
                 textValue={row.item.title}
                 id={row.item.id}
                 deleteTodo={deleteTodo}
-                // completeTodo={completeTodo}
-                // inCompleteTodo={inCompleteTodo}
               />
             );
           }}
