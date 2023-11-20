@@ -104,9 +104,10 @@ const CalendarContainer = () => {
                 }}
                 theme={colour}
             />
+            {/* <Text>{selectedDate}</Text> */}
             <Modal visible={addTaskModalOpen} animationType="slide">
                 <View style={styles.container}>
-                    <AddTask addTodo={addTodo} />
+                    <AddTask addTodo={addTodo} selectedDate={selectedDate}/>
                     <Button
                         style={styles.button}
                         onPress={() => setAddTaskModalOpen(false)}
@@ -134,8 +135,8 @@ const CalendarContainer = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+        // justifyContent: "center",
+        // alignItems: "center",
     },
     button: {
         margin: 20,

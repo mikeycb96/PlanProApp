@@ -1,34 +1,51 @@
-import { Button, View, TextInput, Form, Input, StyleSheet } from "react-native";
-import { useState } from "react";
+import { Button, View, TextInput, Form, Input, StyleSheet, Text } from "react-native";
+import { useState, useMemo } from "react";
 import Item from "../components/Item";
 import moment from "moment";
+import TimePicker from 'react-native-wheel-time-picker';
 
-const AddTask = ({ addTodo }) => {
+const AddTask = ({ addTodo, selectedDate }) => {
   const [text, setText] = useState("");
-  
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
 
-  const onAddTask = (task) => {
-    addTodo(task, moment("2023-11-06 08:00", "YYYY-MM-DD HH:mm"), moment("2023-11-06 10:00", "YYYY-MM-DD HH:mm"));
+  const onAddTask = (task, startTime, endTime) => {
+    starting = selectedDate + " 08:00"
+    ending = selectedDate + " 10:00"
+    addTodo(task, moment(JSON.stringify(starting), "YYYY-MM-DD HH:mm"), moment(JSON.stringify(ending), "YYYY-MM-DD HH:mm"));
     setText("");
-    // alert('Task added')
+    alert('Task added')
   };
 
+  const [timeValue, setTimeValue] = useState(Date.now());
+  // const [hour, min] = useMemo(() => {
+  //   return [
+  //     Math.floor(timeValue / MILLISECONDS_PER_HOUR),
+  //     Math.floor((timeValue % MILLISECONDS_PER_HOUR) / MILLISECONDS_PER_MINUTE),
+  //     Math.floor((timeValue % MILLISECONDS_PER_MINUTE) / 1000),
+  //   ];
+  // }, [timeValue]);
+
   return (
-    <View>
-      <View>
+    <View style={styles.container}>
         <TextInput
           value={text}
           placeholder="Enter new task..."
           onChangeText={setText}
         />
-      </View>
-      <View>
-        <Button
+        <TimePicker
+        value={timeValue}
+        wheelProps={{
+          wheelHeight: 70,
+          itemHeight: 15,
+        }}
+        onChange={(newValue) => setTimeValue(newValue)}
+      />
+      <Button
           style={styles.button}
           title="Add Task"
           onPress={() => onAddTask(text)}
         ></Button>
-      </View>
     </View>
   );
 };
@@ -41,6 +58,9 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: 20,
+  },
+  timeValue: {
+    marginVertical: 20,
   },
 });
 

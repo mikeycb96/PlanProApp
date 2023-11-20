@@ -23,10 +23,13 @@
     "react-native": "0.72.6",
     "react-native-calendar-timetable": "^1.0.6",
     "react-native-calendars": "^1.1302.0",
+    "react-native-date-picker": "^4.3.3",
+    "react-native-dropdown-picker": "^5.4.6",
     "react-native-get-random-values": "^1.9.0",
     "react-native-svg": "13.9.0",
     "react-native-vector-icons": "^10.0.1",
     "react-native-web": "~0.19.6",
+    "react-native-wheel-time-picker": "^0.4.3",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
